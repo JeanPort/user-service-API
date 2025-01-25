@@ -22,9 +22,10 @@ import static java.util.Collections.emptyList;
 public class UserServiceTest {
 
     @InjectMocks
-    private IUserSerivice serivice;
+    private UserServiceImpl serivice;
     @Mock
     private UserRepository repository;
+    @InjectMocks
     private UserUtil util;
     private List<User> users;
 
@@ -43,7 +44,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void findByName_ShouldReturnUser_WhenNameExists() {
+    void findAll_ShouldReturnUserByName_WhenNameExists() {
         var name = this.users.getFirst();
         var list = this.users.stream().filter(user -> user.getFirstName().equalsIgnoreCase(name.getFirstName())).toList();
         BDDMockito.when(repository.findByName(name.getFirstName())).thenReturn(list);
