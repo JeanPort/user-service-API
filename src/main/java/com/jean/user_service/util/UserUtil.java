@@ -10,17 +10,18 @@ import java.util.List;
 public class UserUtil {
 
     public List<User> createListUserProd() {
-        var user1 = User.builder().id(1L).firstName("Jean").lastName("Port").email("jean@email.com").build();
-        var user2 = User.builder().id(2L).firstName("Pierre").lastName("Cosmann").email("pierre@email.com").build();
-        var user3 = User.builder().id(3L).firstName("Ana").lastName("Borges").email("ana@email.com").build();
+        var user1 = new User(1L,"Jean","Port","jean@email.com");
+        var user2 = new User(2L,"Pierre","Cosmann","pierre@email.com");
+        var user3= new User(3L,"Ana","Aguiar","ana@email.com");
+
         return new ArrayList<>(List.of(user1,user2, user3));
     }
 
 
     public List<User> createListUserTest() {
-        var user1 = User.builder().id(1L).firstName("Jean T").lastName("Port T").email("jean@email.com").build();
-        var user2 = User.builder().id(2L).firstName("Pierre T").lastName("Cosmann T").email("pierre@email.com").build();
-        var user3 = User.builder().id(3L).firstName("Ana T").lastName("Borges T").email("ana@email.com").build();
+        var user1 = new User(1L,"Jean T","Port","jean@email.com");
+        var user2 = new User(2L,"Pierre T","Cosmann","pierre@email.com");
+        var user3= new User(3L,"Ana T","Aguiar","ana@email.com");
         return new ArrayList<>(List.of(user1,user2, user3));
     }
 }
