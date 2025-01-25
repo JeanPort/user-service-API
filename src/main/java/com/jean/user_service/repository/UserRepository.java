@@ -32,11 +32,11 @@ public class UserRepository {
         return user;
     }
 
-    public void remove(User user) {
+    public void delete(User user) {
         data.getUsers().remove(user);
     }
     public void update(User user) {
-        remove(user);
+        delete(user);
         data.getUsers().add(user);
     }
 }

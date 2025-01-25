@@ -2,7 +2,6 @@ package com.jean.user_service.repository;
 
 import com.jean.user_service.domain.User;
 import com.jean.user_service.util.UserUtil;
-import org.assertj.core.api.AssertJProxySetup;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,12 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
-import static java.util.Collections.emptyList;
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserRepositoryTest {
@@ -101,7 +95,7 @@ class UserRepositoryTest {
         var deleteUser = users.getFirst();
         BDDMockito.when(data.getUsers()).thenReturn(users);
 
-        repository.remove(deleteUser);
+        repository.delete(deleteUser);
         var res = repository.findById(deleteUser.getId());
         Assertions.assertThat(users).doesNotContain(deleteUser);
         Assertions.assertThat(res).isEmpty();
@@ -120,7 +114,6 @@ class UserRepositoryTest {
         var res = repository.findById(update.getId());
         Assertions.assertThat(res).isPresent();
         Assertions.assertThat(res.get().getFirstName()).isEqualTo(update.getFirstName());
-
 
     }
 }
