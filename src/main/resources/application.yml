@@ -1,0 +1,20 @@
+
+
+
+spring:
+  application:
+    name: user-service
+  threads:
+    virtual:
+      enabled: true
+
+server:
+  servlet:
+    context-path: /
+  error:
+    include-stacktrace: on_param
+  tomcat:
+    threads:
+      max: 20
+
+
