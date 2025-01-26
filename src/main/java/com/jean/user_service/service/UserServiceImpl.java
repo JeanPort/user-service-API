@@ -11,7 +11,6 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements IUserSerivice {
 
-
     private final UserRepository repository;
 
     public UserServiceImpl(UserRepository repository) {
