@@ -2,17 +2,17 @@ package com.jean.user_service.request;
 
 public class UserPostRequest {
 
-    private String fisrtName;
+    private String firstName;
     private String lastName;
     private String email;
 
 
-    public String getFisrtName() {
-        return fisrtName;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setFisrtName(String fisrtName) {
-        this.fisrtName = fisrtName;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
     public String getLastName() {

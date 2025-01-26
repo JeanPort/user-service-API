@@ -3,7 +3,7 @@ package com.jean.user_service.response;
 public class UserGetResponse {
 
     private Long id;
-    private String fisrtName;
+    private String firstName;
     private String lastName;
     private String email;
 
@@ -11,8 +11,8 @@ public class UserGetResponse {
         return id;
     }
 
-    public String getFisrtName() {
-        return fisrtName;
+    public String getFirstName() {
+        return firstName;
     }
 
     public String getLastName() {
@@ -27,8 +27,8 @@ public class UserGetResponse {
         this.id = id;
     }
 
-    public void setFisrtName(String fisrtName) {
-        this.fisrtName = fisrtName;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
     public void setLastName(String lastName) {
