@@ -7,6 +7,7 @@ import com.jean.user_service.request.UserPutRequest;
 import com.jean.user_service.response.UserGetResponse;
 import com.jean.user_service.response.UserPostResponse;
 import com.jean.user_service.service.IUserSerivice;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -46,14 +47,14 @@ public class UserController {
     }
 
     @PutMapping()
-    public ResponseEntity<Void> update(@RequestBody UserPutRequest request){
+    public ResponseEntity<Void> update(@RequestBody @Valid UserPutRequest request){
         var res = mapper.toUser(request);
         serivice.update(res);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping()
-    public ResponseEntity<UserPostResponse> create(@RequestBody UserPostRequest request){
+    public ResponseEntity<UserPostResponse> create(@RequestBody @Valid UserPostRequest request){
         var user = mapper.toUser(request);
         user = serivice.create(user);
         var response = mapper.toUserPostResponse(user);

@@ -5,6 +5,7 @@ import com.jean.user_service.repository.UserData;
 import com.jean.user_service.repository.UserRepository;
 import com.jean.user_service.util.FileResourceLoader;
 import com.jean.user_service.util.UserUtil;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -16,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -162,5 +164,45 @@ public class UserControllerTest {
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
 
+    }
+
+    @Test
+    void create_ShouldBadRequstWhenFieldIsEmpty() throws Exception {
+        var request = fileResourceLoader.readResourceFile("user/post-user-request-empty-400.json");
+
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/v1/users").content(request).contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn();
+
+        Exception resolvedException = mvcResult.getResolvedException();
+
+        var firstNameError = "The field 'firstName' connot be null";
+        var lastNameError = "The field 'lastName' connot be null";
+        var emailError = "The field 'email' is not valid";
+
+        Assertions.assertThat(resolvedException).isNotNull();
+        Assertions.assertThat(resolvedException.getMessage()).contains(firstNameError, lastNameError, emailError);
+    }
+
+    @Test
+    void create_ShouldBadRequstWhenFieldIsBlanck() throws Exception {
+        var request = fileResourceLoader.readResourceFile("user/post-user-request-blanck-400.json");
+
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/v1/users").content(request).contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn();
+
+        Exception resolvedException = mvcResult.getResolvedException();
+
+        var firstNameError = "The field 'firstName' connot be null";
+        var lastNameError = "The field 'lastName' connot be null";
+        var emailError = "The field 'email' is not valid";
+
+        Assertions.assertThat(resolvedException).isNotNull();
+        Assertions.assertThat(resolvedException.getMessage()).contains(firstNameError, lastNameError, emailError);
     }
 }
