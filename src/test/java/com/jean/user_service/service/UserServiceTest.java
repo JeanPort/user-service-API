@@ -47,7 +47,7 @@ public class UserServiceTest {
     void findAll_ShouldReturnUserByName_WhenNameExists() {
         var name = this.users.getFirst();
         var list = this.users.stream().filter(user -> user.getFirstName().equalsIgnoreCase(name.getFirstName())).toList();
-        BDDMockito.when(repository.findByName(name.getFirstName())).thenReturn(list);
+        BDDMockito.when(repository.findAllByFirstNameIgnoreCase(name.getFirstName())).thenReturn(list);
 
         var res = serivice.findAll(name.getFirstName());
         Assertions.assertThat(res).isNotNull().hasSameElementsAs(list);
@@ -57,7 +57,7 @@ public class UserServiceTest {
     void findByName_ShouldReturnEmptyList_WhenNameDoesNotExist() {
         var name = "x";
 
-        BDDMockito.when(repository.findByName(name)).thenReturn(emptyList());
+        BDDMockito.when(repository.findAllByFirstNameIgnoreCase(name)).thenReturn(emptyList());
 
         var res = serivice.findAll(name);
         Assertions.assertThat(res).isNotNull().isEmpty();
@@ -84,10 +84,20 @@ public class UserServiceTest {
     void create_ShouldPersistUser() {
         var user = new User(10L, "novo", "novo novo", "novo@email");
 
-        BDDMockito.when(repository.create(user)).thenReturn(user);
+        BDDMockito.when(repository.save(user)).thenReturn(user);
 
         var res = serivice.create(user);
         Assertions.assertThat(res).isEqualTo(user);
+
+    }
+
+    @Test
+    void create_ShouldExcpition_WhenEmailExists() {
+        var user = new User(1L, "jaja", "xaxa", "pierre@email.com");
+
+        BDDMockito.when(repository.findByEmailIgnoreCase(user.getEmail())).thenReturn(Optional.of(user));
+
+        Assertions.assertThatException().isThrownBy(() -> serivice.create(user)).isInstanceOf(ResponseStatusException.class);
 
     }
 
@@ -119,7 +129,7 @@ public class UserServiceTest {
         var att = new User(update.getId(), "novo nome", "ultimo nome", "novo@email");
 
         BDDMockito.when(repository.findById(att.getId())).thenReturn(Optional.of(update));
-        BDDMockito.doNothing().when(repository).update(att);
+        BDDMockito.when(repository.save(att)).thenReturn(att);
 
         Assertions.assertThatNoException().isThrownBy(() -> serivice.update(att));
 
@@ -127,11 +137,22 @@ public class UserServiceTest {
 
     @Test
     void update_ShouldExcpition_WhenIdDoesNotExists() {
-        var id = new User(100L, "nana", "jaosdfa", "fadls@fdslafjs");
+        var user = new User(100L, "nana", "jaosdfa", "fadls@fdslafjs");
 
-        BDDMockito.when(repository.findById(id.getId())).thenReturn(Optional.empty());
+        BDDMockito.when(repository.findById(user.getId())).thenReturn(Optional.empty());
 
-        Assertions.assertThatException().isThrownBy(() -> serivice.update(id)).isInstanceOf(ResponseStatusException.class);
+        Assertions.assertThatException().isThrownBy(() -> serivice.update(user)).isInstanceOf(ResponseStatusException.class);
+
+    }
+
+    @Test
+    void update_ShouldExcpition_WhenEmailExists() {
+        var user = new User(1L, "jaja", "xaxa", "pierre@email.com");
+
+        BDDMockito.when(repository.findById(user.getId())).thenReturn(Optional.of(user));
+        BDDMockito.when(repository.findByEmailIgnoreCaseAndIdNot(user.getEmail(), user.getId())).thenReturn(Optional.of(user));
+
+        Assertions.assertThatException().isThrownBy(() -> serivice.update(user)).isInstanceOf(ResponseStatusException.class);
 
     }
 }
