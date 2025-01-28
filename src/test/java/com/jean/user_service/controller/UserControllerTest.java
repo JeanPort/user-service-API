@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.ComponentScan;
@@ -99,11 +100,13 @@ public class UserControllerTest {
     void findById_ShouldReturnException_WhenIdDoesNotExists() throws Exception {
 
         var id = 10L;
+        var response = fileResourceLoader.readResourceFile("user/excption-user-response.json");
 
         BDDMockito.when(data.getUsers()).thenReturn(this.users);
         mockMvc.perform(MockMvcRequestBuilders.get("/v1/users/{id}", id))
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().json(response));
     }
 
     @Test
@@ -136,11 +139,13 @@ public class UserControllerTest {
     void delete_ShouldException_WhenIdDoesNotExists() throws Exception {
 
         var id = 10L;
+        var response = fileResourceLoader.readResourceFile("user/excption-user-response.json");
         BDDMockito.when(data.getUsers()).thenReturn(this.users);
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/v1/users/{id}",id))
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().json(response));
 
     }
 
@@ -158,11 +163,13 @@ public class UserControllerTest {
     @Test
     void update_ShouldExcpition_WhenIdDoesNotExists() throws Exception {
         var request = fileResourceLoader.readResourceFile("user/put-user-request-10-id-200.json");
+        var response = fileResourceLoader.readResourceFile("user/excption-user-response.json");
 
         BDDMockito.when(data.getUsers()).thenReturn(this.users);
         mockMvc.perform(MockMvcRequestBuilders.put("/v1/users").content(request).contentType(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().json(response));
 
     }
 
@@ -204,5 +211,47 @@ public class UserControllerTest {
 
         Assertions.assertThat(resolvedException).isNotNull();
         Assertions.assertThat(resolvedException.getMessage()).contains(firstNameError, lastNameError, emailError);
+    }
+
+    @Test
+    void update_ShouldBadRequstWhenFieldIsEmpty() throws Exception {
+        var request = fileResourceLoader.readResourceFile("user/put-user-request-empty-400.json");
+
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put("/v1/users").content(request).contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn();
+
+        Exception resolvedException = mvcResult.getResolvedException();
+
+        var idError = "The field 'id' cannot null";
+        var firstNameError = "The field 'firstName' connot be null";
+        var lastNameError = "The field 'lastName' connot be null";
+        var emailError = "The field 'email' is not valid";
+
+        Assertions.assertThat(resolvedException).isNotNull();
+        Assertions.assertThat(resolvedException.getMessage()).contains(idError, firstNameError, lastNameError, emailError);
+    }
+
+    @Test
+    void update_ShouldBadRequstWhenFieldIsBlack() throws Exception {
+        var request = fileResourceLoader.readResourceFile("user/put-user-request-blanck-400.json");
+
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put("/v1/users").content(request).contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn();
+
+        Exception resolvedException = mvcResult.getResolvedException();
+
+        var idError = "The field 'id' cannot null";
+        var firstNameError = "The field 'firstName' connot be null";
+        var lastNameError = "The field 'lastName' connot be null";
+        var emailError = "The field 'email' is not valid";
+
+        Assertions.assertThat(resolvedException).isNotNull();
+        Assertions.assertThat(resolvedException.getMessage()).contains(idError, firstNameError, lastNameError, emailError);
     }
 }

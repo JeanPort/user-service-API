@@ -1,10 +1,9 @@
 package com.jean.user_service.service;
 
 import com.jean.user_service.domain.User;
+import com.jean.user_service.exception.NotFoundException;
 import com.jean.user_service.repository.UserRepository;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -24,7 +23,7 @@ public class UserServiceImpl implements IUserSerivice {
 
     @Override
     public User findById(Long id) {
-        return repository.findById(id).orElseThrow(() ->  new ResponseStatusException(HttpStatus.NOT_FOUND, "Não encontrado"));
+        return repository.findById(id).orElseThrow(() ->  new NotFoundException("Usuario não encontrado"));
     }
 
     @Override
@@ -34,13 +33,13 @@ public class UserServiceImpl implements IUserSerivice {
 
     @Override
     public void delete(Long id) {
-        var res = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Não encontrado"));
+        var res = repository.findById(id).orElseThrow(() -> new NotFoundException("Usuario não encontrado"));
         repository.delete(res);
     }
 
     @Override
     public void update(User user) {
-        repository.findById(user.getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Não encontrado"));
+        repository.findById(user.getId()).orElseThrow(() -> new NotFoundException("Usuario não encontrado"));
         repository.update(user);
     }
 }
