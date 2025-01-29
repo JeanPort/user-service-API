@@ -84,6 +84,7 @@ public class UserServiceTest {
     void create_ShouldPersistUser() {
         var user = new User(10L, "novo", "novo novo", "novo@email");
 
+        BDDMockito.when(repository.findByEmailIgnoreCase(user.getEmail())).thenReturn(Optional.empty());
         BDDMockito.when(repository.save(user)).thenReturn(user);
 
         var res = serivice.create(user);
@@ -129,6 +130,7 @@ public class UserServiceTest {
         var att = new User(update.getId(), "novo nome", "ultimo nome", "novo@email");
 
         BDDMockito.when(repository.findById(att.getId())).thenReturn(Optional.of(update));
+        BDDMockito.when(repository.findByEmailIgnoreCaseAndIdNot(att.getEmail(), att.getId())).thenReturn(Optional.empty());
         BDDMockito.when(repository.save(att)).thenReturn(att);
 
         Assertions.assertThatNoException().isThrownBy(() -> serivice.update(att));

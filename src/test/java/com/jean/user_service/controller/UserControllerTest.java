@@ -112,9 +112,10 @@ public class UserControllerTest {
     void create_ShouldPersistUser() throws Exception {
         var request = fileResourceLoader.readResourceFile("user/post-user-request-200.json");
         var response = fileResourceLoader.readResourceFile("user/post-user-response-201.json");
-        var novo = new User(10L, "Novo", "xxxx", "novo@email.com");
+        var retorno = new User(10L, "Novo", "xxxx", "novo@email.com");
 
-        BDDMockito.when(repository.save(ArgumentMatchers.any())).thenReturn(novo);
+        BDDMockito.when(repository.findByEmailIgnoreCase(retorno.getEmail())).thenReturn(Optional.empty());
+        BDDMockito.when(repository.save(ArgumentMatchers.any())).thenReturn(retorno);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/v1/users").content(request).contentType(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
@@ -129,7 +130,6 @@ public class UserControllerTest {
         var response = fileResourceLoader.readResourceFile("/user/excption-user-response-email.json");
         var user = new User(null, "jean", "pport", "pierre@email.com");
 
-        BDDMockito.when(repository.findById(user.getId())).thenReturn(Optional.of(user));
         BDDMockito.when(repository.findByEmailIgnoreCase(user.getEmail())).thenReturn(Optional.of(user));
 
         mockMvc.perform(MockMvcRequestBuilders.post("/v1/users").content(request).contentType(MediaType.APPLICATION_JSON))
@@ -168,7 +168,10 @@ public class UserControllerTest {
     void update_ShouldModifyUserDetails_WhenIdExists() throws Exception {
         var request = fileResourceLoader.readResourceFile("user/put-user-request-1-id-200.json");
         var user = users.getFirst();
+        var userEmail = users.getLast();
+
         BDDMockito.when(repository.findById(user.getId())).thenReturn(Optional.of(user));
+        BDDMockito.when(repository.findByEmailIgnoreCaseAndIdNot(userEmail.getEmail(), user.getId())).thenReturn(Optional.of(user));
         BDDMockito.when(repository.save(user)).thenReturn(user);
         mockMvc.perform(MockMvcRequestBuilders.put("/v1/users").content(request).contentType(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())

@@ -49,14 +49,14 @@ public class UserServiceImpl implements IUserSerivice {
     private void assertEmailDoesNotExist(String email) {
         var res = repository.findByEmailIgnoreCase(email);
         if (res.isPresent()) {
-            throw new EmailAlreadyExistsException("Email exist in other user");
+            throw new EmailAlreadyExistsException("Email exist in another user");
         }
     }
 
     private void assertEmailDoesNotExist(String email, Long id) {
         var res = repository.findByEmailIgnoreCaseAndIdNot(email, id);
         if (res.isPresent()) {
-            throw new EmailAlreadyExistsException("Email exist in other user");
+            throw new EmailAlreadyExistsException("Email exist in another user");
         }
     }
 }
