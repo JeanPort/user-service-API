@@ -1,8 +1,15 @@
 package com.jean.user_service.controller;
 
 import com.jean.user_service.domain.User;
+import com.jean.user_service.mapper.ProfileMapper;
+import com.jean.user_service.mapper.UserMapper;
+import com.jean.user_service.mapper.UserMapperImpl;
+import com.jean.user_service.repository.ProfileRepository;
 import com.jean.user_service.repository.UserRepository;
+import com.jean.user_service.service.ProfileServiceImpl;
+import com.jean.user_service.service.UserServiceImpl;
 import com.jean.user_service.util.FileResourceLoader;
+import com.jean.user_service.util.ProfileUtil;
 import com.jean.user_service.util.UserUtil;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +19,7 @@ import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -25,8 +33,9 @@ import java.util.Optional;
 
 import static java.util.Collections.emptyList;
 
-@WebMvcTest(controllers = UserControllerTest.class)
-@ComponentScan(basePackages = "com.jean.user_service")
+@WebMvcTest(controllers = UserController.class)
+//@ComponentScan(basePackages = "com.jean.user_service")
+@Import({UserMapperImpl.class, UserServiceImpl.class, UserRepository.class, UserUtil.class, FileResourceLoader.class, UserController.class})
 public class UserControllerTest {
 
     @Autowired

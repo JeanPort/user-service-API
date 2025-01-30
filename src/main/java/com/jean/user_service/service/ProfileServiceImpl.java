@@ -10,7 +10,7 @@ import java.util.List;
 @Service
 public class ProfileServiceImpl implements IProfileSerivce{
 
-    private ProfileRepository repository;
+    private final ProfileRepository repository;
 
     public ProfileServiceImpl(ProfileRepository repository) {
         this.repository = repository;

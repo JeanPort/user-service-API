@@ -65,7 +65,7 @@ public class Profile {
         return "Profile{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", descricao='" + description + '\'' +
+                ", description='" + description + '\'' +
                 '}';
     }
 }
